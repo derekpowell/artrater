@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+
+import { ThemeProvider } from '@mui/material'
+import theme from './mui/theme'
+import { Box } from '@mui/material'
+import { styled } from '@mui/system'
+
+import Header from './components/Header'
+import RateMain from './components/RateMain'
+
+const MainContainer = styled(Box)({
+	minWidth: '100vw',
+	minHeight: '100vh',
+	padding: 0,
+	margin: 0,
+})
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<ThemeProvider theme={theme}>
+			<MainContainer>
+				<Header />
+				<RateMain />
+			</MainContainer>
+		</ThemeProvider>
+	)
 }
 
-export default App;
+export default App
