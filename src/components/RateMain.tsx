@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Box, Button, Typography, Stack } from '@mui/material'
 import { styled } from '@mui/system'
@@ -37,18 +37,23 @@ const InnerContainer = styled(Stack)(({ theme }) => ({
 	},
 }))
 const imgStyle = {
-	width: '100%',
+	width: 'auto',
+	maxWidth: '100%',
+	maxHeight: 700,
 }
 const RateMain = () => {
+	const [imgUrl, setImgUrl] = useState(
+		'https://uploads5.wikiart.org/00164/images/aaron-douglas/untitled4.png!Large.png',
+	)
+	const nextImgUrl = (url: string) => {
+		setImgUrl(url)
+	}
 	return (
 		<MainContainer>
 			<InnerContainer>
 				<Typography variant='h2'>Rate for painting xxx</Typography>
-				<img
-					src='https://uploads5.wikiart.org/00164/images/aaron-douglas/untitled4.png!Large.png'
-					style={imgStyle}
-				/>
-				<RateStars />
+				<img src={imgUrl} style={imgStyle} />
+				<RateStars nextImgUrl={nextImgUrl} imgUrl={imgUrl} />
 				<BtnContainer>
 					<Button variant='text' startIcon={<ArrowBackIosNewIcon />} sx={styledBtn}>
 						Previous
