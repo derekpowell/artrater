@@ -12,6 +12,9 @@ const theme = createTheme({
 		},
 	},
 	palette: {
+		primary: {
+			main: '#101223',
+		},
 		common: {
 			black: '#101223',
 		},

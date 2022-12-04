@@ -3,17 +3,19 @@ import React, { useState } from 'react'
 import { Box, IconButton, Stack } from '@mui/material'
 import StarIcon from '@mui/icons-material/Star'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
+import { ImgTableData, ImgData } from './types'
 
 interface IProps {
 	nextImgUrl: (str: string) => void
 	imgUrl: string
+	updateTableName: (imgData: string) => void
+	updateCurrentData: (data: ImgTableData) => void
+	updateCurrentIndex: (index: number) => void
 }
+
 const RateStars = (props: IProps) => {
 	const rateRange = [1, 2, 3, 4, 5]
-
 	const [isRated, setIsRated] = useState([false, false, false, false, false])
-	// const API_URL = 'https://psjokdypgi.execute-api.us-east-1.amazonaws.com/test/pets'
-	// const NEXT_IMAGE_URL = 'https://5dhjz9rws2.execute-api.us-east-1.amazonaws.com/default/nextImage'
 	const API_URL = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/access_db'
 
 	const rateAndNext = (rate: number) => {
@@ -25,13 +27,21 @@ const RateStars = (props: IProps) => {
 
 		fetch(API_URL)
 			.then((response) => response.json())
-			.then((data) => {
+			.then((data: ImgData) => {
 				console.log('check', data)
-				const currentIndex = data.findIndex((element: any) => element.image === props.imgUrl)
+				// props.updateTableName(data)
+				props.updateTableName(data.tableName)
+
+				const currentIndex = data.rows.findIndex(
+					(element: ImgTableData) => element.image === props.imgUrl,
+				)
+				props.updateCurrentIndex(currentIndex)
 				if (currentIndex) {
-					props.nextImgUrl(data[currentIndex + 1].image)
+					props.nextImgUrl(data.rows[currentIndex + 1].image)
+					props.updateCurrentData(data.rows[currentIndex + 1])
 				} else {
-					props.nextImgUrl(data[0].image)
+					props.nextImgUrl(data.rows[0].image)
+					props.updateCurrentData(data.rows[0])
 				}
 			})
 			.then((res) => setIsRated([false, false, false, false, false]))
