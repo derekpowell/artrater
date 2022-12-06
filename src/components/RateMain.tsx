@@ -46,37 +46,69 @@ const RateMain = () => {
 	const [imgUrl, setImgUrl] = useState(
 		'https://uploads5.wikiart.org/00164/images/aaron-douglas/untitled4.png!Large.png',
 	)
+	const GET_TABLE_DATA = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/access_db'
+
 	const [currentData, setCurrentData] = useState<ImgTableData>()
-	const [currentIndex, setCurrentIndex] = useState<number>(0)
+	const [completedData, setCompletedData] = useState<number[][]>([])
 	const [isErr, setIsErr] = useState<boolean>(false)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const DELETE_URL = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/deleteimage'
-	const GET_URL = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/access_db'
 	const [tableName, setTableName] = useState('')
+	const [isEnded, setIsEnded] = useState<boolean>(false)
 	const nextImgUrl = (url: string) => {
 		setImgUrl(url)
 	}
-
+	const getRandomInt = (min: number, max: number) => {
+		return Math.floor(Math.random() * (max - min + 1)) + min
+	}
+	const getNewTableData = (tableNum: string) => {
+		const url = new URL(GET_TABLE_DATA)
+		const params = { tableNum }
+		url.search = new URLSearchParams(params).toString()
+		return fetch(url).then((response) => response.json())
+	}
 	const updateTableName = (name: string) => {
 		setTableName(name)
+	}
+	const updateCompletedData = (newCombo: number[]) => {
+		setCompletedData((oldArray) => [...oldArray, newCombo])
 	}
 	const updateCurrentData = (data: ImgTableData) => {
 		setCurrentData(data)
 	}
-	const updateCurrentIndex = (index: number) => {
-		setCurrentIndex(index)
+
+	const toggleIsEnded = () => {
+		setIsEnded(!isEnded)
 	}
 	const getNextData = () => {
-		fetch(GET_URL)
-			.then((response) => response.json())
-			.then((data: ImgData) => {
-				console.log('check', data)
-				const nextIndex = currentIndex + 1
-				updateTableName(data.tableName)
-				nextImgUrl(data.rows[nextIndex].image)
-				updateCurrentData(data.rows[nextIndex])
-				setCurrentIndex(nextIndex)
-				setIsErr(false)
+		setIsLoading(true)
+		let result = true
+		let newCombo: number[] = []
+		let tableData: ImgData = { tableName: '', rows: [] }
+		let rowNum = 0
+		do {
+			console.log('while loop')
+			const tableNum = getRandomInt(0, 1) + ''
+			getNewTableData(tableNum).then((data: ImgData) => {
+				console.log({ data })
+				tableData = data
+				const maxIndex = data.rows.length - 1
+				rowNum = getRandomInt(0, maxIndex)
+				newCombo = [+tableNum, +rowNum]
+				result = completedData.includes(newCombo)
+				if (!result) {
+					updateValues(newCombo, tableData, rowNum)
+				}
 			})
+		} while (!result)
+	}
+	const updateValues = (newCombo: number[], tableData: ImgData, rowNum: number) => {
+		setCompletedData((oldArray) => [...oldArray, newCombo])
+		setTableName(tableData.tableName)
+		setCurrentData(tableData.rows[rowNum])
+		setImgUrl(tableData.rows[rowNum].image || '')
+		setIsEnded(true)
+		setIsLoading(false)
 	}
 	const handleError = () => {
 		console.log('image url broken')
@@ -102,7 +134,7 @@ const RateMain = () => {
 				<Typography variant='h2'>
 					Rate for <b>{currentData?.title}</b> by <b>{currentData?.artistName}</b>
 				</Typography>
-				{isErr ? (
+				{isErr || isLoading ? (
 					<CircularProgress color='primary' />
 				) : (
 					<img onError={handleError} src={imgUrl} style={imgStyle} />
@@ -112,7 +144,14 @@ const RateMain = () => {
 					imgUrl={imgUrl}
 					updateTableName={updateTableName}
 					updateCurrentData={updateCurrentData}
-					updateCurrentIndex={updateCurrentIndex}
+					// updateCurrentIndex={updateCurrentIndex}
+					getRandomInt={getRandomInt}
+					getNewTableData={getNewTableData}
+					completedData={completedData}
+					updateCompletedData={updateCompletedData}
+					getNextData={getNextData}
+					isEnded={isEnded}
+					toggleIsEnded={toggleIsEnded}
 				/>
 				<BtnContainer>
 					<Button variant='text' startIcon={<ArrowBackIosNewIcon />} sx={styledBtn}>
