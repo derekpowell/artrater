@@ -3,18 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { Box, IconButton, Stack } from '@mui/material'
 import StarIcon from '@mui/icons-material/Star'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
-import { ImgTableData, ImgData } from './types'
 
 interface IProps {
-	nextImgUrl: (str: string) => void
-	imgUrl: string
-	updateTableName: (imgData: string) => void
-	updateCurrentData: (data: ImgTableData) => void
-	// updateCurrentIndex: (index: number) => void
-	getRandomInt: (min: number, max: number) => number
-	getNewTableData: (tableNum: string) => Promise<ImgData>
-	completedData: number[][]
-	updateCompletedData: (newCombo: number[]) => void
 	getNextData: VoidFunction
 	isEnded: boolean
 	toggleIsEnded: VoidFunction

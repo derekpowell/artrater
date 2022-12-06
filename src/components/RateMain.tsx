@@ -44,21 +44,20 @@ const imgStyle = {
 	maxHeight: 'calc(100% - 200px)',
 }
 const RateMain = () => {
-	const [imgUrl, setImgUrl] = useState('')
 	const numberOfTable = 1
 	const maxRatingNum = 10
 	const GET_TABLE_DATA = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/access_db'
+	const DELETE_URL = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/deleteimage'
+	const [imgUrl, setImgUrl] = useState('')
 	const [currentData, setCurrentData] = useState<ImgTableData>()
 	const [completedData, setCompletedData] = useState<number[][]>([])
 	const [isErr, setIsErr] = useState<boolean>(false)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [isCompleted, setIsCompleted] = useState<boolean>(false)
-	const DELETE_URL = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/deleteimage'
+
 	const [tableName, setTableName] = useState('')
 	const [isEnded, setIsEnded] = useState<boolean>(false)
-	const nextImgUrl = (url: string) => {
-		setImgUrl(url)
-	}
+
 	const getRandomInt = (min: number, max: number) => {
 		return Math.floor(Math.random() * (max - min + 1)) + min
 	}
@@ -67,15 +66,6 @@ const RateMain = () => {
 		const params = { tableNum }
 		url.search = new URLSearchParams(params).toString()
 		return fetch(url).then((response) => response.json())
-	}
-	const updateTableName = (name: string) => {
-		setTableName(name)
-	}
-	const updateCompletedData = (newCombo: number[]) => {
-		setCompletedData((oldArray) => [...oldArray, newCombo])
-	}
-	const updateCurrentData = (data: ImgTableData) => {
-		setCurrentData(data)
 	}
 
 	const toggleIsEnded = () => {
@@ -147,19 +137,7 @@ const RateMain = () => {
 				) : (
 					<img onError={handleError} src={imgUrl} style={imgStyle} />
 				)}
-				<RateStars
-					nextImgUrl={nextImgUrl}
-					imgUrl={imgUrl}
-					updateTableName={updateTableName}
-					updateCurrentData={updateCurrentData}
-					getRandomInt={getRandomInt}
-					getNewTableData={getNewTableData}
-					completedData={completedData}
-					updateCompletedData={updateCompletedData}
-					getNextData={getNextData}
-					isEnded={isEnded}
-					toggleIsEnded={toggleIsEnded}
-				/>
+				<RateStars getNextData={getNextData} isEnded={isEnded} toggleIsEnded={toggleIsEnded} />
 				<BtnContainer>
 					<Button variant='text' startIcon={<ArrowBackIosNewIcon />} sx={styledBtn}>
 						Previous
