@@ -116,13 +116,15 @@ const RateMain = () => {
 		}
 		if (currentData) {
 			params.id = currentData.contentId + ''
-		}
-		url.search = new URLSearchParams(params).toString()
+			url.search = new URLSearchParams(params).toString()
 
-		fetch(url).then((res) => {
-			console.log('res', res.json())
+			fetch(url).then((res) => {
+				console.log('res', res.json())
+				getNextData()
+			})
+		} else {
 			getNextData()
-		})
+		}
 	}
 
 	return (
