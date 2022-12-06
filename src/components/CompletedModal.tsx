@@ -11,7 +11,7 @@ const CompletedModal = (props: IProps) => {
 	return (
 		<Dialog open={isCompleted}>
 			<DialogTitle>Rating has been completed</DialogTitle>
-			<DialogContent>Explanation how to get rewarded.</DialogContent>
+			<DialogContent>Explanation how to get rewarded with mTuk.</DialogContent>
 			<DialogActions>
 				<Button color='primary'>Get reward</Button>
 			</DialogActions>
