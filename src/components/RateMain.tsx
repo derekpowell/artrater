@@ -5,6 +5,7 @@ import { styled } from '@mui/system'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 
 import RateStars from '../components/RateStars'
+import CompletedModal from './CompletedModal'
 import { ImgTableData, ImgData } from './types'
 
 const MainContainer = styled(Box)({
@@ -43,15 +44,15 @@ const imgStyle = {
 	maxHeight: 'calc(100% - 200px)',
 }
 const RateMain = () => {
-	const [imgUrl, setImgUrl] = useState(
-		'https://uploads5.wikiart.org/00164/images/aaron-douglas/untitled4.png!Large.png',
-	)
+	const [imgUrl, setImgUrl] = useState('')
+	const numberOfTable = 1
+	const maxRatingNum = 10
 	const GET_TABLE_DATA = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/access_db'
-
 	const [currentData, setCurrentData] = useState<ImgTableData>()
 	const [completedData, setCompletedData] = useState<number[][]>([])
 	const [isErr, setIsErr] = useState<boolean>(false)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [isCompleted, setIsCompleted] = useState<boolean>(false)
 	const DELETE_URL = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/deleteimage'
 	const [tableName, setTableName] = useState('')
 	const [isEnded, setIsEnded] = useState<boolean>(false)
@@ -82,33 +83,38 @@ const RateMain = () => {
 	}
 	const getNextData = () => {
 		setIsLoading(true)
-		let result = true
-		let newCombo: number[] = []
-		let tableData: ImgData = { tableName: '', rows: [] }
-		let rowNum = 0
-		do {
-			console.log('while loop')
-			const tableNum = getRandomInt(0, 1) + ''
-			getNewTableData(tableNum).then((data: ImgData) => {
-				console.log({ data })
-				tableData = data
-				const maxIndex = data.rows.length - 1
-				rowNum = getRandomInt(0, maxIndex)
-				newCombo = [+tableNum, +rowNum]
-				result = completedData.includes(newCombo)
-				if (!result) {
-					updateValues(newCombo, tableData, rowNum)
-				}
-			})
-		} while (!result)
+		if (completedData.length > maxRatingNum) {
+			setIsCompleted(true)
+		} else {
+			let result = true
+			let newCombo: number[] = []
+			let tableData: ImgData = { tableName: '', rows: [] }
+			let rowNum = 0
+			do {
+				const tableNum = getRandomInt(0, numberOfTable) + ''
+				getNewTableData(tableNum).then((data: ImgData) => {
+					console.log('while loop!!', { data })
+					tableData = data
+					const maxIndex = data.rows.length - 1
+					rowNum = getRandomInt(0, maxIndex)
+					newCombo = [+tableNum, +rowNum]
+					result = completedData.includes(newCombo)
+					if (!result) {
+						updateValues(newCombo, tableData, rowNum)
+					}
+				})
+			} while (!result)
+		}
 	}
 	const updateValues = (newCombo: number[], tableData: ImgData, rowNum: number) => {
+		console.log('data updated')
 		setCompletedData((oldArray) => [...oldArray, newCombo])
 		setTableName(tableData.tableName)
 		setCurrentData(tableData.rows[rowNum])
 		setImgUrl(tableData.rows[rowNum].image || '')
 		setIsEnded(true)
 		setIsLoading(false)
+		setIsErr(false)
 	}
 	const handleError = () => {
 		console.log('image url broken')
@@ -128,8 +134,10 @@ const RateMain = () => {
 			getNextData()
 		})
 	}
+
 	return (
 		<MainContainer>
+			<CompletedModal isCompleted={isCompleted} />
 			<InnerContainer>
 				<Typography variant='h2'>
 					Rate for <b>{currentData?.title}</b> by <b>{currentData?.artistName}</b>
@@ -144,7 +152,6 @@ const RateMain = () => {
 					imgUrl={imgUrl}
 					updateTableName={updateTableName}
 					updateCurrentData={updateCurrentData}
-					// updateCurrentIndex={updateCurrentIndex}
 					getRandomInt={getRandomInt}
 					getNewTableData={getNewTableData}
 					completedData={completedData}

@@ -30,11 +30,9 @@ const RateStars = (props: IProps) => {
 		copy[rate] = true
 		copy.forEach((bool, i) => (i < rate ? (copy[i] = true) : (copy[i] = false)))
 		setIsRated(copy)
-		console.log('before nextdata')
 		getNextData()
 	}
 	useEffect(() => {
-		// if isEnded
 		if (isEnded) {
 			setIsRated([false, false, false, false, false])
 			toggleIsEnded()
