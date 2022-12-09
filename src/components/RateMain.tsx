@@ -1,107 +1,85 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { Box, Button, Typography, Stack, CircularProgress } from '@mui/material'
-import { styled } from '@mui/system'
+import { Button, Typography, CircularProgress } from '@mui/material'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 
 import RateStars from '../components/RateStars'
 import CompletedModal from './CompletedModal'
-import { ImgTableData, ImgData } from './types'
+import { ImgTableData, ImgData, RatingData } from './types'
+import {
+	MainContainer,
+	BtnContainer,
+	styledBtn,
+	InnerContainer,
+	ImgContainer,
+	imgStyle,
+} from './StyledComponent'
 
-const MainContainer = styled(Box)({
-	display: 'flex',
-	marginTop: 70,
-	justifyContent: 'center',
-	alignItems: 'center',
-	height: 'calc(100vh - 70px)',
-	flexDirection: 'column',
-})
-const BtnContainer = styled(Box)({
-	width: '100%',
-	textAlign: 'left',
-})
-const styledBtn = {
-	textTransform: 'capitalize',
-	color: 'common.black',
-}
-
-const InnerContainer = styled(Stack)(({ theme }) => ({
-	maxWidth: '100%',
-	alignItems: 'center',
-	justifyContent: 'space-evenly',
-	height: '100%',
-	maxHeight: '100%',
-	padding: 24,
-	[theme.breakpoints.up('sm')]: {
-		width: 600,
-		maxWidth: 600,
-		padding: 0,
-	},
-}))
-const imgStyle = {
-	width: 'auto',
-	maxWidth: '100%',
-	maxHeight: 'calc(100% - 200px)',
-}
 const RateMain = () => {
-	const numberOfTable = 1
-	const maxRatingNum = 10
-	const GET_TABLE_DATA = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/access_db'
+	const { stars } = useParams()
+	console.log({ stars })
+	const minRate = 20
+	const maxRate = 100
+	const [numOfStars, setNumOfStars] = useState<number>(minRate)
+	const numOfRatings = 1
+	// const GET_TABLE_DATA = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/access_db'
 	const DELETE_URL = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/deleteimage'
+	const RANDOM_IMG = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/random-img'
 	const [imgUrl, setImgUrl] = useState('')
-	const [currentData, setCurrentData] = useState<ImgTableData>()
-	const [completedData, setCompletedData] = useState<number[][]>([])
+	const [currentData, setCurrentData] = useState<ImgTableData>({ title: '' })
+	const [completedData, setCompletedData] = useState<RatingData[]>([])
 	const [isErr, setIsErr] = useState<boolean>(false)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [isCompleted, setIsCompleted] = useState<boolean>(false)
 
-	const [tableName, setTableName] = useState('')
+	// const [tableName, setTableName] = useState('')
 	const [isEnded, setIsEnded] = useState<boolean>(false)
 
-	const getRandomInt = (min: number, max: number) => {
-		return Math.floor(Math.random() * (max - min + 1)) + min
+	const toggleIsCompleted = () => {
+		setIsCompleted(!isCompleted)
 	}
-	const getNewTableData = (tableNum: string) => {
-		const url = new URL(GET_TABLE_DATA)
-		const params = { tableNum }
-		url.search = new URLSearchParams(params).toString()
-		return fetch(url).then((response) => response.json())
+	const getRandomImgData = () => {
+		//fetch random data via api
+		let isDuplicate = true
+		do {
+			return fetch(RANDOM_IMG)
+				.then((response) => response.json())
+				.then((data) => {
+					console.log({ data })
+					console.log('rows', data.rows[0])
+					const found = completedData.find((item) => item.contentId === data.rows[0].contentId)
+					if (found) {
+						isDuplicate = true
+					} else {
+						isDuplicate = false
+					}
+					setCurrentData(data.rows[0])
+					setImgUrl(data.rows[0].image)
+					setIsLoading(false)
+					setIsErr(false)
+					setIsEnded(true)
+				})
+				.catch((err) => console.log({ err }))
+		} while (!isDuplicate)
 	}
+	// const getRandomInt = (min: number, max: number) => {
+	// 	return Math.floor(Math.random() * (max - min + 1)) + min
+	// }
+	// const getNewTableData = (tableNum: string) => {
+	// 	const url = new URL(GET_TABLE_DATA)
+	// 	const params = { tableNum }
+	// 	url.search = new URLSearchParams(params).toString()
+	// 	return fetch(url).then((response) => response.json())
+	// }
 
 	const toggleIsEnded = () => {
 		setIsEnded(!isEnded)
 	}
-	const getNextData = () => {
-		setIsLoading(true)
-		if (completedData.length > maxRatingNum) {
-			setIsCompleted(true)
-		} else {
-			let result = true
-			let newCombo: number[] = []
-			let tableData: ImgData = { tableName: '', rows: [] }
-			let rowNum = 0
-			do {
-				const tableNum = getRandomInt(0, numberOfTable) + ''
-				getNewTableData(tableNum).then((data: ImgData) => {
-					console.log('while loop!!', { data })
-					tableData = data
-					const maxIndex = data.rows.length - 1
-					rowNum = getRandomInt(0, maxIndex)
-					newCombo = [+tableNum, +rowNum]
-					result = completedData.includes(newCombo)
-					if (!result) {
-						updateValues(newCombo, tableData, rowNum)
-					}
-				})
-			} while (!result)
-		}
-	}
-	const updateValues = (newCombo: number[], tableData: ImgData, rowNum: number) => {
+
+	const updateComplitedData = (data: RatingData) => {
 		console.log('data updated')
-		setCompletedData((oldArray) => [...oldArray, newCombo])
-		setTableName(tableData.tableName)
-		setCurrentData(tableData.rows[rowNum])
-		setImgUrl(tableData.rows[rowNum].image || '')
+		setCompletedData((oldArray) => [...oldArray, data])
 		setIsEnded(true)
 		setIsLoading(false)
 		setIsErr(false)
@@ -109,37 +87,55 @@ const RateMain = () => {
 	const handleError = () => {
 		console.log('image url broken')
 		setIsErr(true)
+		const params = { id: '' }
 		const url = new URL(DELETE_URL)
-		const params = {
-			table: tableName,
-			id: '',
-		}
 		if (currentData) {
 			params.id = currentData.contentId + ''
 			url.search = new URLSearchParams(params).toString()
 
 			fetch(url).then((res) => {
 				console.log('res', res.json())
-				getNextData()
+				getRandomImgData()
 			})
 		} else {
-			getNextData()
+			getRandomImgData()
 		}
 	}
+	useEffect(() => {
+		if (!!stars && +stars > maxRate) {
+			setNumOfStars(maxRate)
+		} else if (!!stars && +stars < minRate) {
+			setNumOfStars(minRate)
+		} else if (typeof stars !== 'undefined') {
+			setNumOfStars(+stars)
+		}
+	}, [])
 
 	return (
 		<MainContainer>
-			<CompletedModal isCompleted={isCompleted} />
+			<CompletedModal isCompleted={isCompleted} completedData={completedData} />
 			<InnerContainer>
-				<Typography variant='h2'>
+				<Typography variant='h2' pt={1}>
 					Rate for <b>{currentData?.title}</b> by <b>{currentData?.artistName}</b>
 				</Typography>
 				{isErr || isLoading ? (
 					<CircularProgress color='primary' />
 				) : (
-					<img onError={handleError} src={imgUrl} style={imgStyle} />
+					<ImgContainer>
+						<img onError={handleError} src={imgUrl} style={imgStyle} />
+					</ImgContainer>
 				)}
-				<RateStars getNextData={getNextData} isEnded={isEnded} toggleIsEnded={toggleIsEnded} />
+				<RateStars
+					getNextData={getRandomImgData}
+					isEnded={isEnded}
+					toggleIsEnded={toggleIsEnded}
+					numOfStars={numOfStars}
+					updateComplitedData={updateComplitedData}
+					currentData={currentData}
+					toggleIsCompleted={toggleIsCompleted}
+					numOfRatings={numOfRatings}
+					completedData={completedData}
+				/>
 				<BtnContainer>
 					<Button variant='text' startIcon={<ArrowBackIosNewIcon />} sx={styledBtn}>
 						Previous

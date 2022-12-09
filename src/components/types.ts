@@ -33,3 +33,21 @@ export interface ImgData {
 	rows: ImgTableData[]
 	tableName: string
 }
+
+export interface RatingData {
+	title?: string
+	contentId?: number | null
+	artistContentId?: number | null
+	artistName?: string
+	completitionYear?: number | null
+	genre?: string
+	style?: string
+	tags?: string
+	image?: string
+	height?: number
+	width?: number
+	artistUrl?: string
+	url?: string
+	maxRate: number
+	rate: number
+}
