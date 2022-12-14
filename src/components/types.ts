@@ -1,4 +1,5 @@
 export interface ImgTableData {
+	id: number
 	title?: string
 	contentId?: number
 	artistContentId?: number
@@ -27,6 +28,7 @@ export interface ImgTableData {
 	galleryName?: string
 	tags?: string
 	description?: string
+	misc?: string
 }
 
 export interface ImgData {
@@ -35,19 +37,9 @@ export interface ImgData {
 }
 
 export interface RatingData {
-	title?: string
+	id: number
 	contentId?: number | null
-	artistContentId?: number | null
-	artistName?: string
-	completitionYear?: number | null
-	genre?: string
-	style?: string
-	tags?: string
-	image?: string
-	height?: number
-	width?: number
-	artistUrl?: string
+	time_spent?: number
 	url?: string
-	maxRate: number
-	rate: number
+	rating: number
 }

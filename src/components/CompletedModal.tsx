@@ -2,6 +2,8 @@ import React from 'react'
 
 import short from 'short-uuid'
 import { Button, Dialog, DialogContent, DialogTitle, DialogActions } from '@mui/material'
+import { useCookies } from 'react-cookie'
+
 import { RatingData } from './types'
 
 interface IProps {
@@ -11,13 +13,23 @@ interface IProps {
 }
 const CompletedModal = (props: IProps) => {
 	const { isCompleted, completedData } = props
-
+	const [cookies, setCookie, removeCookie] = useCookies(['user'])
 	const saveData = () => {
-		const userId = short.generate()
-		console.log('userId', userId)
+		const id = short.generate()
+		let userId: string
+
+		// get cookie
+		if (cookies.user) {
+			userId = cookies.user
+		} else {
+			userId = short.generate()
+			// max one year, works for all
+			setCookie('user', userId, { path: '/', maxAge: 1000 * 60 * 60 * 24 * 365, secure: true })
+		}
 		const timestamp = Date.now()
 		const SAVE_URL = 'https://8lk48vno8a.execute-api.us-east-1.amazonaws.com/dev/save-rates'
 		const formatted = {
+			id,
 			userId,
 			timestamp,
 			rates: completedData,
@@ -45,7 +57,7 @@ const CompletedModal = (props: IProps) => {
 	return (
 		<Dialog open={isCompleted}>
 			<DialogTitle>Rating has been completed</DialogTitle>
-			<DialogContent>Explanation how to get rewarded with mTuk.</DialogContent>
+			<DialogContent>Explanation how to get rewarded with mTurk.</DialogContent>
 			<DialogActions>
 				<Button color='primary' onClick={saveData}>
 					Get reward

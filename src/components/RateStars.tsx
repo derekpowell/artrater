@@ -15,6 +15,8 @@ interface IProps {
 	toggleIsCompleted: VoidFunction
 	numOfRatings: number
 	completedData: RatingData[]
+	toggleIsLoading: VoidFunction
+	imgUrl: string
 }
 
 const RateStars = (props: IProps) => {
@@ -28,56 +30,59 @@ const RateStars = (props: IProps) => {
 		toggleIsCompleted,
 		numOfRatings,
 		completedData,
+		toggleIsLoading,
+		imgUrl,
 	} = props
 	const rateRange = Array.from(Array(numOfStars).keys())
 	const rateArr = new Array(numOfStars).fill(false)
-	const [isRated, setIsRated] = useState(rateArr)
+	const [ratings, setRatings] = useState(rateArr)
+	const [timeBegin, setTimeBegin] = useState<number>(Date.now())
 
 	const rateAndNext = (rate: number) => {
-		const copy = [...isRated]
+		toggleIsLoading()
+		const beginTime = timeBegin
+		const endTime = Date.now()
+		const diff = endTime - beginTime
+		const copy = [...ratings]
 		copy[rate] = true
-		copy.forEach((bool, i) => (i < rate ? (copy[i] = true) : (copy[i] = false)))
-		setIsRated(copy)
-		storeRatedData(rate)
-		console.log({ completedData })
-		if (completedData.length > numOfRatings) {
+		copy.forEach((bool, i) => (i <= rate ? (copy[i] = true) : (copy[i] = false)))
+		setRatings(copy)
+		const len = completedData.length + 1
+		if (len >= numOfRatings) {
 			toggleIsCompleted()
 		} else {
 			getNextData()
 		}
+		storeRatedData(rate, diff)
 	}
-	const storeRatedData = (rate: number) => {
+	const storeRatedData = (rate: number, diff: number) => {
 		const formatted: RatingData = {
-			title: currentData.title || '',
+			id: currentData.id || 0,
 			contentId: currentData.contentId || null,
-			artistContentId: currentData.artistContentId || null,
-			artistName: currentData.artistName || '',
-			completitionYear: currentData.completitionYear || null,
-			genre: currentData.genre || '',
-			style: currentData.style || '',
-			tags: currentData.tags,
-			image: currentData.image,
-			height: currentData.height,
-			width: currentData.width,
-			artistUrl: currentData.artistUrl,
-			url: currentData.url,
-			maxRate: numOfStars,
-			rate: rate,
+			time_spent: diff,
+			url: currentData.image,
+			rating: rate,
 		}
 		updateComplitedData(formatted)
 	}
 	useEffect(() => {
 		if (isEnded) {
-			setIsRated(rateArr)
+			setRatings(rateArr)
+			setTimeBegin(Date.now())
 			toggleIsEnded()
 		}
-	}, [isEnded])
+	}, [imgUrl])
+	useEffect(() => {
+		//first time
+		setTimeBegin(Date.now())
+	}, [])
+
 	return (
 		<Stack direction='row' sx={{ flexWrap: 'wrap' }}>
 			{rateRange.map((rate, i) => {
 				return (
 					<Box key={`rate-${rate}`}>
-						{!isRated[i] ? (
+						{!ratings[i] ? (
 							<IconButton
 								aria-label='star'
 								size='large'
@@ -88,7 +93,7 @@ const RateStars = (props: IProps) => {
 							</IconButton>
 						) : (
 							<IconButton aria-label='star filled' size='large' sx={{ padding: 0 }}>
-								<StarIcon fontSize='inherit' />
+								<StarIcon fontSize='inherit' color='primary' />
 							</IconButton>
 						)}
 					</Box>

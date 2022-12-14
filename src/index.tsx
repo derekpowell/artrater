@@ -2,14 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import { CookiesProvider } from 'react-cookie'
 
 import './index.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-	<React.StrictMode>
+	// <React.StrictMode>
+	<CookiesProvider>
 		<App />
-	</React.StrictMode>,
+	</CookiesProvider>,
+	// </React.StrictMode>,
 )
 
 // If you want to start measuring performance in your app, pass a function

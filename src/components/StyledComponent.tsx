@@ -28,9 +28,10 @@ export const InnerContainer = styled(Stack)(({ theme }) => ({
 	maxHeight: '100%',
 	padding: 24,
 	[theme.breakpoints.up('sm')]: {
-		width: 600,
-		maxWidth: 600,
+		width: '100%',
+		maxWidth: 800,
 		padding: 0,
+		margin: 24,
 	},
 }))
 export const ImgContainer = styled(Box)(({ theme }) => ({
@@ -39,7 +40,7 @@ export const ImgContainer = styled(Box)(({ theme }) => ({
 	maxWidth: '100%',
 	alignItems: 'center',
 	height: '100%',
-	maxHeight: '100%',
+	maxHeight: 'calc(100% - 200px)',
 	padding: 24,
 	[theme.breakpoints.up('sm')]: {
 		width: 600,
@@ -52,3 +53,19 @@ export const imgStyle = {
 	maxWidth: '100%',
 	maxHeight: 'calc(100% - 24px)',
 }
+
+export const FullWidthHeight = styled(Box)(({ theme }) => ({
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'center',
+	maxWidth: '100%',
+	alignItems: 'center',
+	marginTop: 70,
+	height: 'calc(100vh - 70px)',
+	padding: 24,
+	// [theme.breakpoints.up('sm')]: {
+	// 	width: 600,
+	// 	maxWidth: 600,
+	// 	padding: 0,
+	// },
+}))
