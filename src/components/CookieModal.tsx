@@ -43,7 +43,7 @@ const CookieModal = (props: IProps) => {
 					<DialogContent>
 						This website uses cookies to track the data. Please accept it to participate in our survey.
 					</DialogContent>
-					<DialogActions sx={{ padding: 24 }}>
+					<DialogActions sx={{ padding: 2 }}>
 						<Button variant='outlined' color='primary' onClick={declineCookie}>
 							Decline
 						</Button>

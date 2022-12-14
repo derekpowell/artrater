@@ -105,6 +105,14 @@ const RateMain = () => {
 			}
 		}
 	}
+	// const handlePrevious = () => {
+	// 	//take current data andremove the one before
+	// 	const copy = [...completedData]
+	// 	const popped = copy.pop()
+	// 	setCompletedData(copy)
+	//     // query last painting and
+	// 	setCurrentData(popped)
+	// }
 	useEffect(() => {
 		if (isErr) {
 			setIsErr(false)
@@ -155,7 +163,12 @@ const RateMain = () => {
 					imgUrl={imgUrl}
 				/>
 				<BtnContainer>
-					<Button variant='text' startIcon={<ArrowBackIosNewIcon />} sx={styledBtn}>
+					<Button
+						variant='text'
+						startIcon={<ArrowBackIosNewIcon />}
+						sx={styledBtn}
+						// onClick={handlePrevious}
+					>
 						Previous
 					</Button>
 				</BtnContainer>
