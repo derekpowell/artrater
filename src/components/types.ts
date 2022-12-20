@@ -37,9 +37,13 @@ export interface ImgData {
 }
 
 export interface RatingData {
-	id: number
-	contentId?: number | null
+	id: string
+	paintingId?: number
+	userId: string
+	rating?: number
+	timestamp?: number
 	time_spent?: number
-	url?: string
-	rating: number
+	extUserId?: string
+	groupId?: string
+	misc?: string
 }

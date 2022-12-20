@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-import { Box, Button, Typography, Stack, CircularProgress } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { styled } from '@mui/system'
 
 export const MainContainer = styled(Box)({
@@ -14,6 +14,7 @@ export const MainContainer = styled(Box)({
 export const BtnContainer = styled(Box)({
 	width: '100%',
 	textAlign: 'left',
+	minHeight: 36.5,
 })
 export const styledBtn = {
 	textTransform: 'capitalize',

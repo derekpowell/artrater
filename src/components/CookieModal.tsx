@@ -22,6 +22,7 @@ const CookieModal = (props: IProps) => {
 		} else {
 			const userId = short.generate()
 			console.log('cookie?', { cookies })
+			// make this 90 days and update every visit
 			setCookie('user', userId, { path: '/', maxAge: 1000 * 60 * 60 * 24 * 365, secure: true })
 			toggleHasCookie()
 		}

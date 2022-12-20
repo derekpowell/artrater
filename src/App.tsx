@@ -26,6 +26,81 @@ function App() {
 			errorElement: <NotFound />,
 		},
 		{
+			path: '/:rates/extUserId/:extUserId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/extUserId/:extUserId/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/extUserId/:extUserId/groupId/:groupId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/groupId/:groupId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/extUserId/:extUserId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/extUserId/:extUserId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/extUserId/:extUserId/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/extUserId/:extUserId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/groupId/:groupId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/extUserId/:extUserId/groupId/:groupId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
 			path: '*',
 			element: <NotFound />,
 			errorElement: <NotFound />,
