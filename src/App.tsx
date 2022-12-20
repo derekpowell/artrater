@@ -31,16 +31,6 @@ function App() {
 			errorElement: <NotFound />,
 		},
 		{
-			path: '/:rates/groupId/:groupId',
-			element: <RateMain />,
-			errorElement: <NotFound />,
-		},
-		{
-			path: '/:rates/misc/:misc',
-			element: <RateMain />,
-			errorElement: <NotFound />,
-		},
-		{
 			path: '/:rates/extUserId/:extUserId/groupId/:groupId',
 			element: <RateMain />,
 			errorElement: <NotFound />,
@@ -51,12 +41,67 @@ function App() {
 			errorElement: <NotFound />,
 		},
 		{
+			path: '/:rates/extUserId/:extUserId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/extUserId/:extUserId/misc/:misc/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
 			path: '/:rates/groupId/:groupId/misc/:misc',
 			element: <RateMain />,
 			errorElement: <NotFound />,
 		},
 		{
-			path: '/:rates/extUserId/:extUserId/misc/:misc',
+			path: '/:rates/groupId/:groupId/misc/:misc/extUserId/:extUserId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/groupId/:groupId/extUserId/:extUserId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/groupId/:groupId/extUserId/:extUserId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/misc/:misc/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/misc/:misc/extUserId/:extUserId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/misc/:misc/extUserId/:extUserId/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/misc/:misc/groupId/:groupId/extUserId/:extUserId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/:rates/extUserId/:extUserId/groupId/:groupId/misc/:misc',
 			element: <RateMain />,
 			errorElement: <NotFound />,
 		},
@@ -81,12 +126,37 @@ function App() {
 			errorElement: <NotFound />,
 		},
 		{
+			path: '/misc/:misc/extUserId/:extUserId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/misc/:misc/extUserId/:extUserId/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/misc/:misc/groupId/:groupId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/misc/:misc/groupId/:groupId/extUserId/:extUserId',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
 			path: '/extUserId/:extUserId/groupId/:groupId',
 			element: <RateMain />,
 			errorElement: <NotFound />,
 		},
 		{
 			path: '/extUserId/:extUserId/misc/:misc',
+			element: <RateMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/extUserId/:extUserId/misc/:misc/groupId/:groupId',
 			element: <RateMain />,
 			errorElement: <NotFound />,
 		},
