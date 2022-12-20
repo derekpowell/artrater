@@ -42,7 +42,6 @@ export const ImgContainer = styled(Box)(({ theme }) => ({
 	alignItems: 'center',
 	height: '100%',
 	maxHeight: 'calc(100% - 200px)',
-	padding: 24,
 	[theme.breakpoints.up('sm')]: {
 		width: 600,
 		maxWidth: 600,
