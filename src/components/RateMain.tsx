@@ -25,7 +25,7 @@ const RateMain = () => {
 	const maxNumOfRatings = 100
 	const numOfStars = 5
 	const [numOfRatings, setNumOfRatings] = useState<number>(rates ? +rates : maxNumOfRatings)
-	const [cookies] = useCookies(['user'])
+	const [cookies, setCookie] = useCookies(['user'])
 	const DELETE_URL = process.env.REACT_APP_DELETE_IMG
 	const RANDOM_IMG = process.env.REACT_APP_RANDOM_IMG
 	const [imgUrl, setImgUrl] = useState('')
@@ -49,8 +49,6 @@ const RateMain = () => {
 			fetch(RANDOM_IMG || '')
 				.then((response) => response.json())
 				.then((data) => {
-					console.log({ data })
-					console.log('rows', data.rows[0])
 					const found = completedData.find((item) => item.id === data.rows[0].id)
 					if (found) {
 						isDuplicate = true
@@ -62,7 +60,6 @@ const RateMain = () => {
 				})
 				.catch((err) => console.log({ err }))
 		} while (!isDuplicate)
-		console.log('isLoading', isLoading)
 		setIsLoading(false)
 		setIsErr(false)
 		setIsEnded(true)
@@ -71,12 +68,10 @@ const RateMain = () => {
 		setIsEnded(!isEnded)
 	}
 	const updateIsLoading = (state: boolean) => {
-		console.log('state update', state)
 		setIsLoading(state)
 	}
 
 	const updateComplitedData = (data: RatingData) => {
-		console.log('data updated', data)
 		setCompletedData((oldArray) => [...oldArray, data])
 		setIsEnded(true)
 		setIsLoading(false)
@@ -100,22 +95,17 @@ const RateMain = () => {
 				url.search = new URLSearchParams(params).toString()
 
 				fetch(url).then((res) => {
-					console.log('res', res.json())
 					getRandomImgData()
 				})
 			}
 		}
 	}
 	const handlePrevious = async () => {
-		console.log({ completedData })
 		const copy = [...completedData]
-		console.log('copy', copy)
 		const popped = copy.pop()
-		console.log({ popped })
 		setCompletedData(copy)
 		if (popped?.paintingId) {
 			const data = await findImage(+popped?.paintingId)
-			console.log('found', { data })
 			if (data) {
 				setIsEnded(true)
 				setCurrentData(data.rows[0])
@@ -146,6 +136,7 @@ const RateMain = () => {
 		}
 		if (cookies.user) {
 			setHasCookie(true)
+			setCookie('user', cookies.user, { path: '/', maxAge: 1000 * 60 * 60 * 24 * 90, secure: true })
 		} else {
 			setHasCookie(false)
 		}

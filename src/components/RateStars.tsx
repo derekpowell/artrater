@@ -86,7 +86,6 @@ const RateStars = (props: IProps) => {
 			setRatings(rateArr)
 			setTimeBegin(Date.now())
 			toggleIsEnded()
-			console.log('new begintime is set')
 		}
 	}, [imgUrl])
 

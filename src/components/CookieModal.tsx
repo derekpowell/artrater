@@ -17,13 +17,11 @@ const CookieModal = (props: IProps) => {
 	const acceptCookie = () => {
 		// redirect to the survey page
 		if (cookies.user) {
-			console.log('user', cookies.user)
 			toggleHasCookie()
 		} else {
 			const userId = short.generate()
-			console.log('cookie?', { cookies })
 			// make this 90 days and update every visit
-			setCookie('user', userId, { path: '/', maxAge: 1000 * 60 * 60 * 24 * 365, secure: true })
+			setCookie('user', userId, { path: '/', maxAge: 1000 * 60 * 60 * 24 * 90, secure: true })
 			toggleHasCookie()
 		}
 	}
