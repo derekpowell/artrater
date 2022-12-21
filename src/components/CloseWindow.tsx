@@ -1,14 +1,7 @@
 import React from 'react'
 
-import {
-	Button,
-	Dialog,
-	DialogContent,
-	DialogTitle,
-	DialogActions,
-	Alert,
-	AlertTitle,
-} from '@mui/material'
+import { Button, Dialog, DialogContent, DialogActions, Alert, AlertTitle } from '@mui/material'
+import texts from './texts'
 
 interface IProps {
 	isWarning: boolean
@@ -28,12 +21,10 @@ const CloseWindow = (props: IProps) => {
 	}
 	return (
 		<Dialog open={isWarning}>
-			{/* <DialogTitle>Warning</DialogTitle> */}
 			<DialogContent>
 				<Alert severity='warning'>
-					<AlertTitle>Warning</AlertTitle>
-					Are you sure you want to discontinue this survey?{' '}
-					<strong>The reward code will be provided at the end of the survey.</strong>
+					<AlertTitle>{texts.warningModal.alertTitle}</AlertTitle>
+					{texts.warningModal.paragraph} <strong>{texts.warningModal.paragraphBold}</strong>
 				</Alert>
 			</DialogContent>
 			<DialogActions>

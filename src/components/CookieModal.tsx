@@ -5,6 +5,9 @@ import short from 'short-uuid'
 import { useCookies } from 'react-cookie'
 
 import CloseWindow from './CloseWindow'
+
+import texts from './texts'
+
 interface IProps {
 	hasCookie: boolean
 	toggleHasCookie: VoidFunction
@@ -38,10 +41,8 @@ const CookieModal = (props: IProps) => {
 				<CloseWindow isWarning={isWarning} toggleIsWarning={toggleIsWarning} />
 			) : (
 				<Dialog open={!hasCookie}>
-					<DialogTitle>Cookie Policy</DialogTitle>
-					<DialogContent>
-						This website uses cookies to track the data. Please accept it to participate in our survey.
-					</DialogContent>
+					<DialogTitle>{texts.cookie.title}</DialogTitle>
+					<DialogContent>{texts.cookie.paragrah}</DialogContent>
 					<DialogActions sx={{ padding: 2 }}>
 						<Button variant='outlined' color='primary' onClick={declineCookie}>
 							Decline

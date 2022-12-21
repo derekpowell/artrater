@@ -61,11 +61,9 @@ export const FullWidthHeight = styled(Box)(({ theme }) => ({
 	maxWidth: '100%',
 	alignItems: 'center',
 	marginTop: 70,
-	height: 'calc(100vh - 70px)',
+	height: 'calc(100vh - 60px)',
 	padding: 24,
-	// [theme.breakpoints.up('sm')]: {
-	// 	width: 600,
-	// 	maxWidth: 600,
-	// 	padding: 0,
-	// },
+	[theme.breakpoints.up('sm')]: {
+		height: 'calc(100vh - 70px)',
+	},
 }))

@@ -1,10 +1,9 @@
 import React from 'react'
 
-import short from 'short-uuid'
 import { Button, Dialog, DialogContent, DialogTitle, DialogActions } from '@mui/material'
-import { useCookies } from 'react-cookie'
 
 import { RatingData } from './types'
+import texts from './texts'
 
 interface IProps {
 	isCompleted: boolean
@@ -18,11 +17,11 @@ const CompletedModal = (props: IProps) => {
 	}
 	return (
 		<Dialog open={isCompleted}>
-			<DialogTitle>Rating has been completed</DialogTitle>
-			<DialogContent>Congratulations!</DialogContent>
+			<DialogTitle>{texts.completedModal.title}</DialogTitle>
+			<DialogContent>{texts.completedModal.paragraph}</DialogContent>
 			<DialogActions>
 				<Button color='primary' onClick={closeWindow}>
-					Close this window.
+					{texts.completedModal.buttonText}
 				</Button>
 			</DialogActions>
 		</Dialog>
