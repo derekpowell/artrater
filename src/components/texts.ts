@@ -15,7 +15,7 @@ const texts = {
 	warningModal: {
 		alertTitle: 'Warning',
 		paragraph: 'Are you sure you want to discontinue this survey?',
-		paragraphBold: 'To enable reward, you may need to accept cookies.',
+		paragraphBold: 'You need to accept cookies to continue this survey.',
 	},
 }
 
