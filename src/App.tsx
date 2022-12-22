@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { ThemeProvider } from '@mui/material'
 import theme from './mui/theme'
 import { Box } from '@mui/material'
 import { styled } from '@mui/system'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 
 import Header from './components/Header'
 import RateMain from './components/RateMain'
 import NotFound from './components/NotFound'
+import RateTextMain from './components/RateTextMain'
+import CookieModal from './components/CookieModal'
 
 const MainContainer = styled(Box)({
 	minWidth: '100vw',
@@ -19,6 +22,11 @@ const MainContainer = styled(Box)({
 })
 
 function App() {
+	const [cookies, setCookie] = useCookies(['user'])
+	const [hasCookie, setHasCookie] = useState<boolean>(false)
+	const toggleHasCookie = () => {
+		setHasCookie(!hasCookie)
+	}
 	const router = createBrowserRouter([
 		{
 			path: '/:rates',
@@ -171,6 +179,16 @@ function App() {
 			errorElement: <NotFound />,
 		},
 		{
+			path: '/text',
+			element: <RateTextMain />,
+			errorElement: <NotFound />,
+		},
+		{
+			path: '/text/:rates',
+			element: <RateTextMain />,
+			errorElement: <NotFound />,
+		},
+		{
 			path: '*',
 			element: <NotFound />,
 			errorElement: <NotFound />,
@@ -185,10 +203,26 @@ function App() {
 		}
 		return '' // Legacy method for cross browser support
 	}
+	useEffect(() => {
+		if (!cookies.user) {
+			setHasCookie(false)
+		}
+	}, [cookies.user])
+
+	useEffect(() => {
+		if (cookies.user) {
+			setHasCookie(true)
+			setCookie('user', cookies.user, { path: '/', maxAge: 1000 * 60 * 60 * 24 * 90, secure: true })
+		} else {
+			setHasCookie(false)
+		}
+	}, [])
+
 	return (
 		<ThemeProvider theme={theme}>
 			<MainContainer>
 				<Header />
+				<CookieModal hasCookie={hasCookie} toggleHasCookie={toggleHasCookie} />
 				<RouterProvider router={router} />
 			</MainContainer>
 		</ThemeProvider>

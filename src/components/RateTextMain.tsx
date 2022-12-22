@@ -3,64 +3,60 @@ import { useParams } from 'react-router-dom'
 
 import { Button, Typography, CircularProgress } from '@mui/material'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
+// import { useCookies } from 'react-cookie'
 
-import RateStars from './RateStarsPainting'
+import RateStarsText from './RateStarsText'
 import CompletedModal from './CompletedModal'
-// import CookieModal from './CookieModal'
-import { ImgTableData, RatingData } from './types'
+
+import { RatingData, TextTableData } from './types'
 import {
 	MainContainer,
 	BtnContainer,
 	styledBtn,
 	InnerContainer,
-	ImgContainer,
-	imgStyle,
+	TextContainer,
 } from './StyledComponent'
 import { findImage, deleteSurvey } from './functions'
 
-const RateMain = () => {
+const RateTextMain = () => {
 	const { rates } = useParams()
 	const minNumOfRatings = 20
 	const maxNumOfRatings = 100
-
+	const numOfStars = 5
 	const [numOfRatings, setNumOfRatings] = useState<number>(rates ? +rates : maxNumOfRatings)
-	const DELETE_URL = process.env.REACT_APP_DELETE_IMG
-	const RANDOM_IMG = process.env.REACT_APP_RANDOM_IMG
-	const [imgUrl, setImgUrl] = useState('')
-	const [currentData, setCurrentData] = useState<ImgTableData>({ id: 0, title: '' })
+	const RANDOM_TEXT = process.env.REACT_APP_RANDOM_TEXT
+	const [currentData, setCurrentData] = useState<TextTableData>({
+		contentId: '',
+		text: '',
+		author: '',
+	})
 	const [completedData, setCompletedData] = useState<RatingData[]>([])
-	const [isErr, setIsErr] = useState<boolean>(false)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [isCompleted, setIsCompleted] = useState<boolean>(false)
 	const [isEnded, setIsEnded] = useState<boolean>(false)
-	const [hasCookie, setHasCookie] = useState<boolean>(false)
 
 	const toggleIsCompleted = () => {
 		setIsCompleted(!isCompleted)
 	}
-	const toggleHasCookie = () => {
-		setHasCookie(!hasCookie)
-	}
-	const getRandomImgData = () => {
-		let isDuplicate = true
-		do {
-			fetch(RANDOM_IMG || '')
+
+	const getRandomTextData = () => {
+		const fetchRandomText = () => {
+			fetch(RANDOM_TEXT || '')
 				.then((response) => response.json())
 				.then((data) => {
-					const found = completedData.find((item) => item.id === data.rows[0].id)
+					const found = completedData.find((item) => item.textId === data.rows[0].contentId)
 					if (found) {
-						isDuplicate = true
+						fetchRandomText()
+						console.log('duplicated', found.id)
 					} else {
-						isDuplicate = false
+						console.log('not duplicated')
 						setCurrentData(data.rows[0])
-						setImgUrl(data.rows[0].image)
+						setIsEnded(true)
 					}
 				})
-				.catch((err) => console.log({ err }))
-		} while (!isDuplicate)
-		// setIsLoading(false)
-		// setIsErr(false)
-		setIsEnded(true)
+		}
+
+		fetchRandomText()
 	}
 	const toggleIsEnded = () => {
 		setIsEnded(!isEnded)
@@ -71,33 +67,8 @@ const RateMain = () => {
 
 	const updateComplitedData = (data: RatingData) => {
 		setCompletedData((oldArray) => [...oldArray, data])
-		setIsEnded(true)
-		setIsLoading(false)
-		setIsErr(false)
 	}
-	const handleError = () => {
-		console.log('image url broken')
-		setIsErr(true)
-		if (currentData.image) {
-			if (imgUrl.includes('!Large.jpg')) {
-				console.log('replacing')
-				const replaced = imgUrl.replace('!Large.jpg', '')
-				setImgUrl(replaced)
-			} else if (imgUrl.includes('!Portrait.jpg')) {
-				const replaced = imgUrl.replace('!Portrait.jpg', '')
-				setImgUrl(replaced)
-			} else {
-				const params = { id: '' }
-				const url = new URL(DELETE_URL || '')
-				params.id = currentData.id + ''
-				url.search = new URLSearchParams(params).toString()
 
-				fetch(url).then((res) => {
-					getRandomImgData()
-				})
-			}
-		}
-	}
 	const handlePrevious = async () => {
 		const copy = [...completedData]
 		const popped = copy.pop()
@@ -107,21 +78,15 @@ const RateMain = () => {
 			if (data) {
 				setIsEnded(true)
 				setCurrentData(data.rows[0])
-				setImgUrl(data.rows[0].image)
 			}
 		}
 		if (completedData.length && popped?.id) {
 			deleteSurvey(popped?.id)
 		}
 	}
-	useEffect(() => {
-		if (isErr) {
-			setIsErr(false)
-		}
-	}, [imgUrl])
 
 	useEffect(() => {
-		getRandomImgData()
+		getRandomTextData()
 		if (!!rates && +rates > maxNumOfRatings) {
 			setNumOfRatings(maxNumOfRatings)
 		} else if (!!rates && +rates < minNumOfRatings) {
@@ -132,29 +97,30 @@ const RateMain = () => {
 	return (
 		<MainContainer>
 			<CompletedModal isCompleted={isCompleted} completedData={completedData} />
-			{/* <CookieModal hasCookie={hasCookie} toggleHasCookie={toggleHasCookie} /> */}
 			<InnerContainer>
-				<Typography variant='h2' pt={1}>
-					<b>{currentData?.title ? currentData?.title : 'N/A'}</b> by <b>{currentData?.artistName}</b>
-				</Typography>
-				{isErr || isLoading || !imgUrl ? (
+				{isLoading ? (
 					<CircularProgress color='primary' />
 				) : (
-					<ImgContainer>
-						<img onError={handleError} src={imgUrl} style={imgStyle} />
-					</ImgContainer>
+					<TextContainer>
+						<Typography variant='h3' sx={{ textAlign: 'justify' }}>
+							{currentData && currentData.text}
+						</Typography>
+						<Typography variant='h4' sx={{ textAlign: 'right', width: '100%' }}>
+							-{currentData && currentData.author}
+						</Typography>
+					</TextContainer>
 				)}
-				<RateStars
-					getNextData={getRandomImgData}
+				<RateStarsText
+					getNextData={getRandomTextData}
 					isEnded={isEnded}
 					toggleIsEnded={toggleIsEnded}
+					numOfStars={numOfStars}
 					updateComplitedData={updateComplitedData}
 					currentData={currentData}
 					toggleIsCompleted={toggleIsCompleted}
 					updateIsLoading={updateIsLoading}
 					numOfRatings={numOfRatings}
 					completedData={completedData}
-					imgUrl={imgUrl}
 				/>
 				<BtnContainer>
 					{!!completedData.length && (
@@ -173,4 +139,4 @@ const RateMain = () => {
 	)
 }
 
-export default RateMain
+export default RateTextMain

@@ -13,6 +13,7 @@ interface IProps {
 const CompletedModal = (props: IProps) => {
 	const { isCompleted } = props
 	const closeWindow = () => {
+		console.log('close window')
 		window.close()
 	}
 	return (

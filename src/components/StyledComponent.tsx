@@ -48,6 +48,20 @@ export const ImgContainer = styled(Box)(({ theme }) => ({
 		padding: 0,
 	},
 }))
+export const TextContainer = styled(Box)(({ theme }) => ({
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'center',
+	maxWidth: '100%',
+	alignItems: 'center',
+	height: '100%',
+	maxHeight: 'calc(100% - 200px)',
+	[theme.breakpoints.up('sm')]: {
+		width: '100%',
+		maxWidth: 800,
+		padding: 0,
+	},
+}))
 export const imgStyle = {
 	width: 'auto',
 	maxWidth: '100%',

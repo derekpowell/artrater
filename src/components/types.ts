@@ -1,5 +1,5 @@
 export interface ImgTableData {
-	id: number
+	id?: number
 	title?: string
 	contentId?: number
 	artistContentId?: number
@@ -38,6 +38,7 @@ export interface ImgData {
 
 export interface RatingData {
 	id: string
+	textId?: string
 	paintingId?: number
 	userId: string
 	rating?: number
@@ -46,4 +47,10 @@ export interface RatingData {
 	extUserId?: string
 	groupId?: string
 	misc?: string
+}
+
+export interface TextTableData {
+	contentId?: string
+	text?: string
+	author?: string
 }

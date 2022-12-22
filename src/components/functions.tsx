@@ -1,11 +1,10 @@
-import { RatingData } from './types'
+import { ImgTableData, RatingData, TextTableData } from './types'
+import short from 'short-uuid'
 
 const FIND_IMG = process.env.REACT_APP_FIND_IMG
-const SAVE_SURVEY = process.env.REACT_APP_SAVE_SURVEY
 const DELETE_SURVEY = process.env.REACT_APP_DELETE_SURVEY
 
 export const findImage = async (id: number) => {
-	//fetch
 	const params = { id: '' }
 	const url = new URL(FIND_IMG || '')
 	params.id = id + ''
@@ -13,8 +12,8 @@ export const findImage = async (id: number) => {
 	return await fetch(url).then((res) => res.json())
 }
 
-export const storeSurvey = async (data: RatingData) => {
-	return await fetch(SAVE_SURVEY || '', {
+export const storeSurvey = async (data: RatingData, url: string) => {
+	return await fetch(url || '', {
 		method: 'POST', // *GET, POST, PUT, DELETE, etc.
 		mode: 'no-cors', // no-cors, *cors, same-origin
 		cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -38,4 +37,52 @@ export const deleteSurvey = async (id: string) => {
 	params.id = id + ''
 	url.search = new URLSearchParams(params).toString()
 	return await fetch(url).then((res) => res.json())
+}
+
+export const formatRatingDataPainting = (
+	currentData: ImgTableData,
+	rate: number,
+	diff: number,
+	userId: string,
+	extUserId: string,
+	groupId: string,
+	misc: string,
+) => {
+	const id = short.generate()
+	const formatted: RatingData = {
+		id: id,
+		paintingId: currentData.id || 0,
+		userId: userId || '',
+		rating: rate + 1,
+		timestamp: Date.now(),
+		time_spent: diff,
+		extUserId: extUserId || '',
+		groupId: groupId || '',
+		misc: misc || '',
+	}
+	return formatted
+}
+
+export const formatRatingDataText = (
+	currentData: TextTableData,
+	rate: number,
+	diff: number,
+	userId: string,
+	extUserId: string,
+	groupId: string,
+	misc: string,
+) => {
+	const id = short.generate()
+	const formatted: RatingData = {
+		id: id,
+		textId: currentData.contentId,
+		userId: userId,
+		rating: rate + 1,
+		timestamp: Date.now(),
+		time_spent: diff,
+		extUserId: extUserId,
+		groupId: groupId,
+		misc: misc,
+	}
+	return formatted
 }
